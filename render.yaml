@@ -1,0 +1,44 @@
+services:
+  - type: web
+    name: ml-skin-checker-backend
+    env: python
+    region: singapore
+    branch: main
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeploy: false
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: REDIS_TOKEN
+        sync: false
+      - key: CORS_ORIGINS
+        value: https://mlskinchecker.netlify.app,https://ml-skin-checker.netlify.app,http://localhost:3000
+      - key: PROVIDER
+        value: mock
+      - key: CACHE_TTL
+        value: 1800
+      - key: RATE_LIMIT_PER_MINUTE
+        value: 20
+
+  # Optional Frontend on Render if you don't want Netlify
+  - type: web
+    name: ml-skin-checker-frontend
+    env: node
+    region: singapore
+    branch: main
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: NEXT_PUBLIC_API_URL
+        value: https://ml-skin-checker-backend.onrender.com

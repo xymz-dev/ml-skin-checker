@@ -1,0 +1,12 @@
+node_modules/
+.next/
+dist/
+__pycache__/
+.venv/
+venv/
+*.pyc
+.env
+.env.local
+.alembic/
+pgdata/
+.DS_Store
